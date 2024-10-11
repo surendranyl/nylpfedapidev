@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sk:systemKeys xmlns:sk="http://pingidentity.com/2018/01/system-keys">
+    <sk:currentKey>
+        <sk:key>eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2Iiwia2lkIjoiVGUwRWdOWFpsciIsInZlcnNpb24iOiIxMS4zLjEuMCIsInppcCI6IkRFRiJ9..aTzRGEMmkWJnVVoE_f-EVQ.rhEaBwHpkmlDDiq89wiuT9IuUvCjb8iKanGEAEKBoiy6VjNb6_SZYv5ZrLsI6vb1.JMhCyYyGyPDKTO2L33amtg</sk:key>
+        <sk:generatedTime>2024-04-09T14:41:32.233Z</sk:generatedTime>
+    </sk:currentKey>
+    <sk:previousKey xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    <sk:pendingKey>
+        <sk:key>eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2Iiwia2lkIjoiVGUwRWdOWFpsciIsInZlcnNpb24iOiIxMS4zLjEuMCIsInppcCI6IkRFRiJ9..GWuVy9I_RovGGDo317X1Jw.RwodStZWcZAFKweh6ciKbstxly1AOZpGjz3vwTenyrESAyeg_k2Ihz9FH-SLC_ii.KJ7dCjW8tqYtYRZvSjFBJA</sk:key>
+        <sk:generatedTime>2024-04-09T14:41:32.234Z</sk:generatedTime>
+    </sk:pendingKey>
+</sk:systemKeys>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:config xmlns:con="http://www.sourceid.org/2004/05/config">
+    <con:map name="scope-descriptions">
+        <con:item name="READ">Get Data from API protected with Mulesoft</con:item>
+        <con:item name="WRITE">WRITE	PUT, POST data to API protected with Mulesoft</con:item>
+    </con:map>
+    <con:item name="lastUpdated">1725998485854</con:item>
+    <con:map name="scope-group-descriptions"/>
+    <con:map name="scope-group-mappings"/>
+    <con:list name="dynamic-common-scopes"/>
+    <con:map name="exclusive-scope-descriptions">
+        <con:item name="dynamic_client_registration">Use this scope to register clients via the dynamic client registration endpoint.</con:item>
+    </con:map>
+    <con:map name="exclusive-scope-group-descriptions"/>
+    <con:map name="exclusive-scope-group-mappings"/>
+    <con:list name="dynamic-exclusive-scopes"/>
+</con:config>

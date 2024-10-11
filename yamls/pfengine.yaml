@@ -1,0 +1,160 @@
+apiVersion: v1
+data:
+  CLUSTER_BIND_ADDRESS: NON_LOOPBACK
+  CLUSTER_NAME: K8S_PF_CLUSTER
+  DNS_QUERY_LOCATION: _bind-port._tcp.pf-cluster-main.pfapps.svc.cluster.local
+  DNS_RECORD_TYPE: SRV
+  OPERATIONAL_MODE: CLUSTERED_ENGINE
+  PING_IDENTITY_ACCEPT_EULA: "YES"
+  HEAP_MIN: 4g
+  HEAP_MAX: 6g
+  NR_AGENT: "-javaagent:/opt/out/instance/server/default/conf/newrelic.jar"
+  NR_KEY: NR_LIC
+  PF_ENV: "pf-api-dev"
+
+ 
+  #Base Server Profile - This pulls config relevant to conf, data and deploy ditectories
+  SERVER_PROFILE_URL: https://068bceabb129402e0e007dd6908ec23380da17ba@git.nylcloud.com/ECS/nylpfedapidev
+  SERVER_PROFILE_PATH: layered-profiles/pingfederate
+
+kind: ConfigMap
+metadata:
+  name: pingfederate-engine-environment-variables-main
+  namespace: "pfapps"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  labels:
+    role: pingfederate-engine
+  name: pf-cluster-main
+  namespace: "pfapps"
+spec:
+  clusterIP: None
+  ports:
+  - name: bind-port
+    port: 7600
+    protocol: TCP
+    targetPort: 7600
+  publishNotReadyAddresses: true
+  selector:
+    role: pingfederate-engine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    role: pingfederate-engine
+    tier: engine
+    version: "main"
+  name: pingfederate-engine-main
+  namespace: "pfapps"
+spec:
+  ports:
+  - name: https
+    port: 9031
+  selector:
+    role: pingfederate-engine
+    tier: engine
+    version: "main"
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    role: pingfederate-engine
+    tier: engine
+  name: pingfederate-engine-main
+  namespace: "pfapps"
+spec:
+  #replicas: PF_ENGINES
+  selector:
+    matchLabels:
+      role: pingfederate-engine
+      tier: engine
+      version: "main"
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        role: pingfederate-engine
+        tier: engine
+        version: "main"
+      name: pingfederate-engine
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: role
+                  operator: In
+                  values:
+                  - pingfederate-engine
+                - key: tier
+                  operator: In
+                  values:
+                  - engine
+                - key: version
+                  operator: In
+                  values:
+                  - main
+              topologyKey: topology.kubernetes.io/zone     
+      initContainers:
+      - name: init
+        image: curlimages/curl:latest
+        command: ['sh', '-c', 'until curl --connect-timeout 1 --silent -k https://pingfederate-admin-main:9999/pingfederate/app ; do echo waiting for admin ; sleep 2 ; done']
+        resources:
+          limits:
+            cpu: "0.125"
+            memory: 200M
+          requests:
+            cpu: "0.125"
+            memory: 200M
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: pingfederate-engine-environment-variables-main
+        #- secretRef:
+            #name: devops-secret
+            #optional: true
+        image: pingidentity/pingfederate:2307-11.3.1
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - sleep 20
+        name: pingfederate
+        ports:
+        - containerPort: 9031
+        readinessProbe:
+          httpGet:
+            path: /pf/heartbeat.ping
+            port: 9031
+            scheme: HTTPS
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "6"
+            memory: 8G
+          requests:
+            cpu: "6"
+            memory: 8G
+      #initContainers:
+      #- command:
+       # - sh
+        #- -c
+        #- until curl --connect-timeout 1 --silent -k https://pingfederate-admin:9999/pingfederate/app ; do echo waiting for admin ; sleep 2 ; done
+        #image: curlimages/curl:latest
+        #name: init

@@ -1,0 +1,13 @@
+# Default JVM memory options for PingAccess
+#
+# Each non-commented and non-empty line will be added as a Java option when PingAccess is started.
+# Comments can be add to this file by starting a line with the # character.
+#
+
+#Minimum heap size
+-Xms${HEAP_MIN}
+#Maximum heap size
+-Xmx${HEAP_MAX}
+-XX:+UseG1GC
+${NR_AGENT}
+-Dlog4j.configuration=file:/opt/in/instance/server/default/conf/log4j2.xml

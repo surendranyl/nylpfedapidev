@@ -1,0 +1,97 @@
+apiVersion: v1
+data:
+  PING_IDENTITY_ACCEPT_EULA: "YES"
+  # PingFederate Settings
+  CLUSTER_BIND_ADDRESS: NON_LOOPBACK
+  CLUSTER_NAME: K8S_PF_CLUSTER
+  DNS_QUERY_LOCATION: _bind-port._tcp.pf-cluster-main.pfapps.svc.cluster.local
+  DNS_RECORD_TYPE: SRV
+  OPERATIONAL_MODE: CLUSTERED_CONSOLE
+  HEAP_MIN: 2g
+  HEAP_MAX: 4g
+  NR_AGENT: ""
+  PF_ENV: "pf-api-dev"
+ 
+  #Base Server Profile. This pull config relevant to conf, data and deploy directories
+  SERVER_PROFILE_URL: https://github.com/surendranyl/nylpfedapidev
+  SERVER_PROFILE_PATH: layered-profiles/pingfederate
+kind: ConfigMap
+metadata:
+  name: pingfederate-admin-environment-variables-main
+  namespace: "pfapps"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    role: pingfederate-admin
+    tier: console
+    version: "main"
+  name: pingfederate-admin-main
+  namespace: "pfapps"
+spec:
+  ports:
+  - name: pf-console
+    port: 9999
+  selector:
+    role: pingfederate-admin
+    tier: console
+    version: "main"
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    role: pingfederate-admin
+    tier: console
+  name: pingfederate-admin-main
+  namespace: "pfapps"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: pingfederate-admin
+      tier: console
+      version: "main"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        role: pingfederate-admin
+        tier: console
+        version: "main"
+      name: pingfederate-admin
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: pingfederate-admin-environment-variables-main
+        image: pingidentity/pingfederate:2307-11.3.1
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /pingfederate/app
+            port: 9999
+            scheme: HTTPS
+          initialDelaySeconds: 500
+          periodSeconds: 1
+        name: pingfederate-admin
+        ports:
+        - containerPort: 9999
+        - containerPort: 7600
+        readinessProbe:
+          httpGet:
+            path: /pingfederate/app
+            port: 9999
+            scheme: HTTPS
+          periodSeconds: 60
+        resources:
+          limits:
+            cpu: "3"
+            memory: 6G
+          requests:
+            cpu: "3"
+            memory: 6G

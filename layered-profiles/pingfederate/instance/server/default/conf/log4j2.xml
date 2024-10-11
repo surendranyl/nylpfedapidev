@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout>           
+		     <pattern>%d %X{trackingid} %-5p [%c] %m{nolookups}%n</pattern>		    
+	     </PatternLayout>           	    
+        </Console>
+
+		<!-- 
+		     Sal Changes made 9/24:
+			 1. Removed QRadarSyslog since Cribl will be used to collect the logs from ConsoleAppenderCEFAudit
+             2. Added %d %X{trackingid} %-5p [PFCEFAUDIT] to the begining of the ConsoleAppenderCEFAudit console logger. This will add HH:mm:ss,SSS trackingid INFO [PFCEFAUDIT] to the begining of every log message to remain consistent with other PingFederate Logs
+             3. Removed references to QRadarSyslog
+			 4. Kedar to reveiw - Added %d %X{trackingid} %-5p [AUD] to the begining of ConsoleAppenderAudit. I dont think we need this appender at all anymore since the CEF appender has more info in it. If you need to keep it, we need to add the header as I've done to properly interpret line breaks. 
+		-->
+		
+		<!-- Kedar Changes made 9/25: 
+		     1. Commented ConsoleAppenderAudit
+			 2. Added {AUD} to ConsoleAppenderCEFAudit since audit logs sent to cloudwatch are parsed based on {AUD} regex
+		-->
+		
+	<!--
+    
+	<Console name="ConsoleAppenderAudit" target="SYSTEM_OUT">
+            <PatternLayout>           
+		     <pattern>%d %X{trackingid} %-5p [AUD] {AUD}|%d| %X{trackingid}| %X{event}| %X{subject}| %X{ip} | %X{app}| %X{connectionid}| %X{protocol}| %X{host}| %X{role}| %X{status}| %X{adapterid}| %X{description}| %X{responsetime} %n</pattern>		    
+	     </PatternLayout>           	    
+        </Console>
+	-->
+	    
+		<Console name="ConsoleAppenderCEFAudit" target="SYSTEM_OUT">
+            <PatternLayout>           
+		     <pattern>%d %X{trackingid} %-5p [PFCEFAUDIT] {AUD} %escape{CEF}{CEF:0|Ping Identity|PingFederate|%X{pfversion}|%X{event}|%X{status}|0|rt=%d{MMM dd yyyy HH:mm:ss.SSS} duid=%X{subject} src=%X{ip} msg=%X{status} TargetApplicationURL=%X{app} ConnectionID=%X{connectionid} Protocol=%X{protocol} dvchost=%X{host} Role=%X{role} externalId=%X{trackingid} SPLocalUserID=%X{localuserid} AdapterID=%X{adapterid} Description=%X{description} ResponseTime=%X{responsetime} %n}</pattern>		    
+	        </PatternLayout>           	    
+        </Console>    
+     </Appenders>		
+    <Loggers>
+	
+	<!-- Internal Adaptive auth flow logging -->
+	<Logger name="com.pingidentity.adapters.htmlform.idp.HtmlFormIdpAuthnAdapter" level="${sys:pf.log.level.NYLInternalAAFlow:-INFO}"/>
+	<Logger name="com.nyl.internalmfa.adapters.MFARegistrationIdpAdapter" level="${sys:pf.log.level.NYLInternalAAFlow:-INFO}"/>
+	<Logger name="com.nyl.internalmfa.adapters.MFARegistrationIdpAdapterAtLogin" level="${sys:pf.log.level.NYLInternalAAFlow:-INFO}"/>
+	<Logger name="com.nyl.internalmfa.adapters.MFAAuthenticationIdpAdapter" level="${sys:pf.log.level.NYLInternalAAFlow:-INFO}"/>
+	<Logger name="com.nyl.internalmfa.adapters.MFARSAAAIdpAdapter" level="${sys:pf.log.level.NYLInternalAAFlow:-INFO}"/>
+	<Logger name="com.nyl.internalmfa.adapters.MFAVPNAuthenticationIdpAdapter" level="${sys:pf.log.level.NYLInternalAAFlow:-INFO}"/>
+
+	
+	<!-- Passwordless flow for agents/workforce logging -->
+	<Logger name="com.nyl.auth.adapters.NYLAuthnIDUserIdpAdapter" level="${sys:pf.log.level.NYLPwLessFlow:-INFO}" />    	
+	<Logger name="com.ping.hypr" level="${sys:pf.log.level.NYLPwLessFlow:-INFO}" />    	
+	<Logger name="com.nyl.passwordless" level="${sys:pf.log.level.NYLPwLessFlow:-INFO}" />
+
+
+	<!-- Client Adaptive auth flow logging -->
+	<Logger name="com.nyl.authentication.selector.RSAAdaptiveAuthSelector" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.PingIdRegistrationIdpAdapter" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.PingIdAuthenticationIdpAdapter" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.PingIdBrokerPWResetIdpAdapter" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.PingIdExternalPWResetIdpAdapter" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.PingIdGBSPWResetIdpAdapter" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.PingIdPWResetIdpAdapter" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	<Logger name="com.pingidentity.adapters.pingid.idp.RSAAADenyIdpAdapterr" level="${sys:pf.log.level.NYLClientsAAFlow:-INFO}"/>
+	
+	<!-- NYL Common Loggers -->
+	<Logger name="org.sourceid" level="${sys:pf.log.level.NYLCommonLoggers:-INFO}" />
+	<Logger name="com.pingidentity" level="${sys:pf.log.level.NYLCommonLoggers:-INFO}" />		
+	<Logger name="org.apache" level="${sys:pf.log.level.NYLCommonLoggers:-INFO}" />	
+	
+	<!-- NYL Custom code wide open logging -->
+	<Logger name="com.nyl" level="${sys:pf.log.level.NYLCustomCode:-INFO}" />
+	
+	<!-- NYL Miscellaneous -->
+	<Logger name="abc.xyz" level="${sys:pf.log.level.NYLMisc:-INFO}" />
+	
+	<!-- NYL Role Chooser -->
+	<Logger name="com.nyl.authentication.adapter.JSONRoleChooser" level="${sys:pf.log.level.NYLRoleChooser:-INFO}" />
+	<Logger name="com.nyl.authentication.adapter.RoleChooser" level="${sys:pf.log.level.NYLRoleChooser:-INFO}" />
+	
+	<!-- Limit Jetty -->
+	<Logger name="org.eclipse.jetty" level="${sys:pf.log.level.NYLJETTYFlow:-INFO}" />
+	<Logger name="org.eclipse.jetty.io.nio" level="${sys:pf.log.level.NYLJETTYFlow:-INFO}" />
+	<Logger name="org.eclipse.jetty.jmx.ObjectMBean" level="${sys:pf.log.level.NYLJETTYFlow:-INFO}" />
+	<Logger name="org.eclipse.jetty.server.session" level="${sys:pf.log.level.NYLJETTYFlow:-INFO}" />
+	<Logger name="org.apache.hivemind" level="${sys:pf.log.level.NYLJETTYFlow:-INFO}" />
+        
+	<!-- Limit the jgroups category  -->
+	<Logger name="org.jgroups" level="${sys:pf.log.level.NYLJGROUPSFlow:-INFO}" />
+	<Logger name="com.pingidentity.jgroups.org.jgroups" level="${sys:pf.log.level.NYLJGROUPSFlow:-INFO}" />
+	<Logger name="com.pingidentity.aws" level="${sys:pf.log.level.NYLJGROUPSFlow:-INFO}" />
+        
+	<!-- Limit the Java Net Logging-->
+	<Logger name="java.net" level="${sys:pf.log.level.NYLJAVANETFlow:-INFO}" />
+
+	<!-- Error Handler Logging -->
+	<Logger name="com.pingidentity.common.util.ErrorHandler" level="WARN" additivity="false">
+		<AppenderRef ref="ConsoleAppender" />
+	</Logger>
+		
+
+		
+		<!-- Start of audit logging -->
+		
+		<Logger name="org.sourceid.websso.profiles.sp.SpAuditLogger"
+                level="INFO" additivity="false" includeLocation="false">
+		<!--	<appender-ref ref="ConsoleAppenderAudit"/> -->
+			<appender-ref ref="ConsoleAppenderCEFAudit"/>
+        </Logger>
+		
+		<Logger name="org.sourceid.websso.profiles.idp.IdpAuditLogger"
+                level="INFO" additivity="false" includeLocation="false">
+		<!--	<appender-ref ref="ConsoleAppenderAudit"/> -->
+			<appender-ref ref="ConsoleAppenderCEFAudit"/>
+
+        </Logger>
+		
+		<Logger name="org.sourceid.websso.profiles.idp.AsAuditLogger"
+                level="INFO" additivity="false" includeLocation="false">
+		<!--	<appender-ref ref="ConsoleAppenderAudit"/> -->
+			<appender-ref ref="ConsoleAppenderCEFAudit"/>
+        </Logger>
+	    
+		<Logger name="org.sourceid.websso.profiles.idp.ClientRegistrationAuditLogger"
+                level="INFO" additivity="false" includeLocation="false">
+		<!--	<appender-ref ref="ConsoleAppenderAudit"/> -->
+			<appender-ref ref="ConsoleAppenderCEFAudit"/>
+        </Logger>
+		
+		 <Logger name="org.sourceid.wstrust.log.STSAuditLogger"
+                level="INFO" additivity="false" includeLocation="false">
+		<!--	<appender-ref ref="ConsoleAppenderAudit"/> -->
+			<appender-ref ref="ConsoleAppenderCEFAudit"/>
+ 
+        </Logger>
+		
+		<!-- End of audit logging -->
+	    
+	  <AsyncRoot level="INFO" includeLocation="false">
+            <AppenderRef ref="ConsoleAppender" />
+      </AsyncRoot>
+	    
+    </Loggers>
+</Configuration>

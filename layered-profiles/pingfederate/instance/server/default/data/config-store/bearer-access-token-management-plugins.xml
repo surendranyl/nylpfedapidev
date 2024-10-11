@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:config xmlns:con="http://www.sourceid.org/2004/05/config">
+    <con:map name="bearer-access-token-management-plugin-sequence">
+        <con:item name="ClientCredentialsGenericATM">790657</con:item>
+        <con:item name="MulesoftClientRegTokenMgr">311734</con:item>
+        <con:item name="MLOPSAIDataATM">1433085</con:item>
+    </con:map>
+    <con:map name="bearer-access-token-management-plugins">
+        <con:item name="ClientCredentialsGenericATM">com.pingidentity.pf.access.token.management.plugins.JwtBearerAccessTokenManagementPlugin</con:item>
+        <con:item name="MulesoftClientRegTokenMgr">org.sourceid.oauth20.token.plugin.impl.ReferenceBearerAccessTokenManagementPlugin</con:item>
+        <con:item name="MLOPSAIDataATM">com.pingidentity.pf.access.token.management.plugins.JwtBearerAccessTokenManagementPlugin</con:item>
+    </con:map>
+    <con:item name="bearer-access-token-management-plugins-default">ClientCredentialsGenericATM</con:item>
+</con:config>

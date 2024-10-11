@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urn:AccessTokenManagerConfiguration inheritAccessControlSettings="false" inheritSelectionSettings="false" inheritSessionValidationSettings="false" restrictClients="true" includeSessionIdentifier="false" checkSessionRevocationStatus="false" checkValidAuthnSession="false" updateAuthnSessionActivity="false" defaultSubjectAttribute="" isInheritExtendedContractAttributes="false" name="MulesoftClientRegTokenMgr" xmlns:urn="urn:sourceid.org:saml2:adapter:conf">
+    <urn:Fields>
+        <urn:Field name="Token Length">28</urn:Field>
+        <urn:Field name="Token Lifetime">43200</urn:Field>
+        <urn:Field name="Lifetime Extension Policy">NONE</urn:Field>
+        <urn:Field name="Maximum Token Lifetime"/>
+        <urn:Field name="Lifetime Extension Threshold Percentage">30</urn:Field>
+        <urn:Field name="Mode for Synchronous RPC">3</urn:Field>
+        <urn:Field name="RPC Timeout">500</urn:Field>
+        <urn:Field name="Expand Scope Groups">false</urn:Field>
+    </urn:Fields>
+    <urn:AdvancedFields>
+        <urn:Field name="Mode for Synchronous RPC">3</urn:Field>
+        <urn:Field name="RPC Timeout">500</urn:Field>
+        <urn:Field name="Expand Scope Groups">false</urn:Field>
+    </urn:AdvancedFields>
+    <urn:Tables/>
+    <urn:ExtendedContractAttributes>
+        <urn:AttributeName>clientId</urn:AttributeName>
+        <urn:AttributeName>scope</urn:AttributeName>
+    </urn:ExtendedContractAttributes>
+    <urn:ExtendedAttributesAdditionalProperties/>
+    <urn:AllowedClientId>ExtGtwyMulesoftClientReg</urn:AllowedClientId>
+    <urn:AllowedClientId>MulesoftClientReg</urn:AllowedClientId>
+</urn:AccessTokenManagerConfiguration>

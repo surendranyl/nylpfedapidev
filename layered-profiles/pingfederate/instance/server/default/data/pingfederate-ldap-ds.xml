@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldap:ldap-sources xmlns:ldap="http://pingidentity.com/2004/09/ldap-ds">
+    <ldap:ldap-source id="LDAP-7272C19824E8F2B3ABAF68D2EF22F41A340AD8E6" maskAttributeValues="false" ldapType="PingDirectory" ldapTypeDesc="PingDirectory" testOnBorrow="false" testOnReturn="false" createIfNecessary="true" retryFailedOperations="false" minIdle="10" maxActive="100" maxWait="-1" timeBetweenEvictionRunsMillis="60000" readTimeoutMillis="3000" connTimeoutMillis="3000" verifyHost="true" dnsTtlMillis="60000" ldapDnsSrvPrefix="_ldap._tcp" ldapsDnsSrvPrefix="_ldaps._tcp">
+        <ldap:host>10.195.70.104:1636</ldap:host>
+        <ldap:principal>uid=svc-PFauthgrant-rw,ou=People,o=Administrators,l=nyl,dc=newyorklife,dc=com</ldap:principal>
+        <ldap:use-ssl>true</ldap:use-ssl>
+        <ldap:use-dns-srv-records>false</ldap:use-dns-srv-records>
+        <ldap:ad-referral>false</ldap:ad-referral>
+        <ldap:credentials>eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2Iiwia2lkIjoiVGUwRWdOWFpsciIsInZlcnNpb24iOiIxMS4zLjUuMCJ9..NjiFoM1CfdERhyOBzsBt6Q.Nb5Zy-LxzaHChXwtsRsyQIjGOxO0gkN4el5wfUoIHJs.s0OvoIYzbJRc-cYtwnJYxA</ldap:credentials>
+        <ldap:authenticationMeth>simple</ldap:authenticationMeth>
+        <ldap:description>OAuthClientStore</ldap:description>
+        <ldap:name>OAuthClientStore</ldap:name>
+        <ldap:binaryAttributes/>
+        <ldap:ldapHostTagList>
+            <ldap:tagEntry host="10.195.70.104:1636" tags=""/>
+        </ldap:ldapHostTagList>
+        <ldap:clientTlsCertAlias xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    </ldap:ldap-source>
+</ldap:ldap-sources>
